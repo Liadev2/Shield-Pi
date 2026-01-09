@@ -14,6 +14,7 @@
         body { background: var(--pi-dark); font-family: 'Orbitron', sans-serif; color: #cbd5e1; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
         .font-pi-sym { font-family: 'Cinzel', serif; }
         
+        /* ESCUDO ORIGINAL */
         .shield-wrapper { display: flex; justify-content: center; align-items: center; margin: 20px 0 40px 0; cursor: pointer; }
         .pi-shield {
             position: relative; width: 220px; height: 280px;
@@ -22,13 +23,7 @@
             box-shadow: inset 0 0 30px rgba(255,255,255,.15), 0 20px 40px rgba(0,0,0,.7);
             display: flex; justify-content: center; align-items: center; transition: transform 0.2s ease;
         }
-        .pi-shield:active { transform: scale(0.95); }
-        .pi-shield::before {
-            content: ""; position: absolute; inset: -14px;
-            background: linear-gradient(135deg, #f0f0f0, #9e9e9e, #6f6f6f, #e5e5e5);
-            border-radius: 18% 18% 22% 22% / 12% 12% 30% 30%; z-index: -1;
-        }
-        .pi-symbol { font-family: "Times New Roman", serif; font-size: 140px; color: #cfcfcf; text-shadow: 0 10px 20px rgba(0,0,0,.6); z-index: 5; }
+        .pi-symbol { font-family: "Times New Roman", serif; font-size: 140px; color: #cfcfcf; z-index: 5; }
 
         .academic-cert {
             background: radial-gradient(circle at center, #111827 0%, #000000 100%);
@@ -38,23 +33,22 @@
         
         .hidden-screen { display: none; }
         .nav-active { color: var(--pi-purple) !important; border-top: 2px solid var(--pi-purple); }
-        .mision-card { background: rgba(131, 13, 167, 0.05); border: 1px solid rgba(131, 13, 167, 0.2); }
     </style>
 </head>
 <body class="pb-24">
 
     <div class="p-4 flex justify-between items-center text-[10px] font-bold tracking-widest">
-        <div id="pi-status" class="text-orange-500">INITIATING SDK...</div>
+        <div id="status-tag" class="text-orange-500">INITIALIZING...</div>
         <div class="flex gap-3">
-            <button onclick="setLang('en')" class="hover:text-purple-500">EN</button>
+            <button onclick="setLang('en')">EN</button>
             <span class="text-slate-700">|</span>
-            <button onclick="setLang('es')" class="hover:text-purple-500">ES</button>
+            <button onclick="setLang('es')">ES</button>
         </div>
     </div>
 
     <main id="screen-home" class="screen p-6">
         <header class="text-center mb-8">
-            <h1 class="text-3xl font-black text-purple-500 italic uppercase tracking-tighter">Shield-<span class="font-pi-sym">π</span></h1>
+            <h1 class="text-3xl font-black text-purple-500 italic uppercase">Shield-<span class="font-pi-sym">π</span></h1>
             <p id="t-subtitle" class="text-[8px] tracking-[4px] text-slate-500 font-bold uppercase"></p>
         </header>
 
@@ -64,139 +58,73 @@
             </div>
         </div>
 
-        <div class="space-y-3 mb-6">
-            <div id="audit-status" class="bg-black/60 border border-slate-800 rounded-lg p-3 text-center min-h-[40px] flex items-center justify-center">
-                <p id="t-standby" class="text-[9px] text-slate-500 uppercase font-bold tracking-[2px]"></p>
-            </div>
-            <div id="port-grid" class="grid grid-cols-5 gap-1 hidden"></div>
-            
-            <div class="flex justify-between items-center bg-purple-900/10 p-3 rounded-lg border border-purple-500/20">
-                <span id="t-progress" class="text-[9px] font-bold uppercase text-purple-400"></span>
-                <span id="progreso-text" class="text-xs font-bold text-white">0%</span>
-            </div>
+        <div id="audit-status" class="bg-black/60 border border-slate-800 rounded-lg p-3 text-center mb-6">
+            <p id="t-standby" class="text-[9px] text-slate-500 uppercase font-bold tracking-[2px]"></p>
         </div>
-
-        <div class="mb-8">
-            <input type="text" id="scam-detector" class="w-full bg-black/40 border border-purple-900/30 rounded-xl py-4 px-5 text-[10px] outline-none focus:border-purple-500 text-white" spellcheck="false">
-            <p id="scam-result-text" class="text-[9px] mt-2 text-center font-bold uppercase tracking-wider min-h-[15px]"></p>
-        </div>
-
-        <div class="bg-gradient-to-r from-purple-900/20 to-transparent border-l-4 border-purple-600 p-5 rounded-r-2xl">
-            <h3 id="t-man-title" class="text-[10px] text-purple-400 mb-2 font-bold uppercase italic"></h3>
-            <p id="t-man-text" class="text-[9px] text-slate-400 italic leading-relaxed"></p>
-        </div>
-    </main>
-
-    <main id="screen-node" class="screen hidden-screen p-6">
-        <h2 id="t-node-title" class="text-xl font-bold text-purple-400 mb-6 uppercase italic"></h2>
-        <div class="bg-slate-800/40 p-5 rounded-2xl border border-slate-700 mb-6">
-            <h4 id="t-calc-title" class="text-[10px] font-bold text-white mb-4 uppercase text-center tracking-widest"></h4>
-            <div class="flex gap-2 mb-4">
-                <input type="number" id="cpu-input" placeholder="Cores" class="w-full bg-black/50 border border-slate-600 rounded-lg p-3 text-xs text-white outline-none">
-                <button onclick="runIAAudit()" class="bg-purple-600 px-6 rounded-lg text-[10px] font-bold uppercase text-white">Scan</button>
-            </div>
-            <p id="ia-feedback" class="text-[9px] font-bold uppercase text-center"></p>
-        </div>
-        <div id="node-reqs" class="space-y-4"></div>
-    </main>
-
-    <main id="screen-misiones" class="screen hidden-screen p-6">
-        <h2 id="t-mission-head" class="text-xl font-bold text-purple-400 mb-2 uppercase italic text-center"></h2>
-        <p id="t-mission-sub" class="text-[9px] text-center text-slate-500 mb-8 uppercase tracking-widest"></p>
-        <div id="misiones-list" class="space-y-5"></div>
     </main>
 
     <main id="screen-premium" class="screen hidden-screen p-6 text-center">
         <div class="academic-cert mb-8 relative overflow-hidden">
-            <div class="absolute inset-0 bg-purple-600/10 blur-2xl"></div>
             <div class="relative z-10 mb-6">
-                <div class="text-5xl font-pi-sym text-purple-500 drop-shadow-lg">π</div>
-                <h2 class="text-[11px] font-black uppercase tracking-[4px] text-white mt-2">Shield-π Cybersecurity Academy</h2>
-                <p class="text-[8px] text-purple-300 tracking-widest uppercase mt-1">Official Node Security Certification</p>
-            </div>
-            <div class="relative z-10 my-6 flex justify-center">
-                <div class="w-28 h-28 rounded-full border-4 border-purple-500 flex items-center justify-center bg-black shadow-xl">
-                    <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2"></rect>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                    </svg>
-                </div>
+                <div class="text-5xl font-pi-sym text-purple-500">π</div>
+                <h2 class="text-[11px] font-black uppercase tracking-[4px] text-white mt-2">Shield-π Academy</h2>
             </div>
             <div class="relative z-10 border-y border-purple-500/30 py-6 my-4 bg-purple-900/20">
-                <p id="t-cert-body" class="text-[9px] font-bold uppercase leading-loose text-cyan-400 px-4">ESTE DOCUMENTO CERTIFICA LA COMPETENCIA DEL PIONEER EN SEGURIDAD DE NODO.</p>
+                <p id="t-cert-body" class="text-[9px] font-bold uppercase text-cyan-400 px-4"></p>
             </div>
         </div>
-        <button onclick="pay(0.3, 'DIPLOMA_CERT')" class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8">0.3 π – Sign Certificate</button>
+
+        <button onclick="pay(0.3, 'DIPLOMA_CERT')" class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black text-xs uppercase mb-8">
+            0.3 π – Sign Certificate
+        </button>
     </main>
 
-    <nav class="fixed bottom-0 w-full bg-slate-900 flex justify-around p-5 text-[9px] font-bold">
+    <nav class="fixed bottom-0 w-full bg-slate-900 border-t border-purple-900/30 flex justify-around p-5 text-[9px] font-bold">
         <button onclick="nav('home')" id="nav-home" class="nav-active">START</button>
-        <button onclick="nav('misiones')" id="nav-misiones" class="text-slate-500">QUESTS</button>
-        <button onclick="nav('node')" id="nav-node" class="text-slate-500">NODE</button>
         <button onclick="nav('premium')" id="nav-premium" class="text-slate-500">PRO</button>
     </nav>
 
     <script>
-        // --- CAMBIO CLAVE PARA ELIMINAR EL ERROR DE SEGURIDAD ---
         const Pi = window.Pi;
         
-        // Forzamos el entorno Sandbox para que coincida con la URL que usas
+        // USA SANDBOX: TRUE PARA PRUEBAS
         Pi.init({ version: "2.0", sandbox: true });
 
-        // Autenticación al cargar (esto elimina el error de localhost al validar el dominio real)
-        Pi.authenticate(['payments', 'username'], (payment) => {
-            console.log("Payment incomplete", payment);
-        }).then(function(auth) {
-            document.getElementById('pi-status').innerText = "ONLINE: " + auth.user.username;
-            document.getElementById('pi-status').classList.replace('text-orange-500', 'text-green-500');
-        }).catch(function(e) {
-            document.getElementById('pi-status').innerText = "PI BROWSER REQUIRED";
-        });
-
-        // --- RESTO DEL CÓDIGO IDÉNTICO ---
-        let currentLang = 'en';
-        let prog = 0;
-        const langData = {
-            en: { subtitle: "secure blockchain node tool", standby: "System: Standby", progress: "Academy Progress", manTitle: "Privacy Manifesto", manText: "Educational tool only.", scamPlaceholder: "Paste link...", scamSafe: "✓ VERIFIED", scamAlert: "🚨 DANGER!", nodeTitle: "Infrastructure", calcTitle: "Hardware Audit", nodeApt: "✓ SYSTEM READY", nodeFail: "⚠ UPGRADE REQUIRED", navHome: "START", navQuest: "QUESTS", navNode: "NODE", navPro: "PRO" },
-            es: { subtitle: "herramienta de nodo seguro", standby: "Sistema: En espera", progress: "Progreso Academia", manTitle: "Manifiesto de Privacidad", manText: "Herramienta educativa.", scamPlaceholder: "Pega el link...", scamSafe: "✓ VERIFICADO", scamAlert: "🚨 PELIGRO!", nodeTitle: "Infraestructura", calcTitle: "Auditoría Hardware", nodeApt: "✓ SISTEMA APTO", nodeFail: "⚠ REQUIERE MEJORA", navHome: "INICIO", navQuest: "MISIONES", navNode: "NODO", navPro: "PREMIUM" }
-        };
-
-        function setLang(l) {
-            currentLang = l; const d = langData[l];
-            document.getElementById('t-subtitle').innerText = d.subtitle;
-            document.getElementById('t-standby').innerText = d.standby;
-            document.getElementById('t-progress').innerText = d.progress;
-            document.getElementById('t-man-title').innerText = d.manTitle;
-            document.getElementById('t-man-text').innerText = d.manText;
-            document.getElementById('nav-home').innerText = d.navHome;
-            document.getElementById('nav-misiones').innerText = d.navQuest;
-            document.getElementById('nav-node').innerText = d.navNode;
-            document.getElementById('nav-premium').innerText = d.navPro;
+        // Autenticación automática
+        async function authenticate() {
+            try {
+                const auth = await Pi.authenticate(['payments', 'username'], onIncompletePayment);
+                document.getElementById('status-tag').innerText = "CONNECTED: " + auth.user.username.toUpperCase();
+                document.getElementById('status-tag').className = "text-green-500";
+            } catch (e) {
+                document.getElementById('status-tag').innerText = "BROWSER ERROR";
+            }
         }
 
+        function onIncompletePayment(payment) {
+            console.log("Incomplete:", payment);
+        }
+
+        // Navegación
         function nav(t) {
             document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden-screen'));
             document.getElementById('screen-' + t).classList.remove('hidden-screen');
-            document.querySelectorAll('nav button').forEach(b => b.classList.replace('nav-active', 'text-slate-500'));
-            document.getElementById('nav-' + t).classList.replace('text-slate-500', 'nav-active');
         }
 
-        async function pay(amount, memo) {
-            try { 
-                await Pi.createPayment({ amount, memo }, {
-                    onReadyForServerCompletion: (id) => alert("Payment ID: " + id),
-                    onCancel: (id) => console.log("Cancelled"),
-                    onError: (error) => alert("Error: " + error.message)
-                });
-            } catch(e) { alert("Use Pi Browser Sandbox"); }
+        // Traducción
+        const langData = {
+            en: { subtitle: "secure node tool", standby: "System: Standby", certBody: "THIS DOCUMENT CERTIFIES THE PIONEER'S COMPETENCE." },
+            es: { subtitle: "herramienta de nodo", standby: "Sistema: En espera", certBody: "ESTE DOCUMENTO CERTIFICA LA COMPETENCIA DEL PIONEER." }
+        };
+
+        function setLang(l) {
+            const d = langData[l];
+            document.getElementById('t-subtitle').innerText = d.subtitle;
+            document.getElementById('t-standby').innerText = d.standby;
+            document.getElementById('t-cert-body').innerText = d.certBody;
         }
 
-        function startPortAudit() {
-            const status = document.getElementById('audit-status');
-            status.innerHTML = `<p class="text-purple-400 animate-pulse">SCANNING PORTS...</p>`;
-            setTimeout(() => { status.innerHTML = `<p class="text-green-500">PORTS VERIFIED</p>`; }, 2000);
-        }
-
+        authenticate();
         setLang('en');
     </script>
 </body>
